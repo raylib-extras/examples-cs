@@ -22,23 +22,10 @@ namespace VoxelMesherSharp
             MeshRef.VertexCount = triangles * 6;
             MeshRef.TriangleCount = triangles * 2;
 
-            unsafe
-            {
-                // be sure to allocate these buffers with Raylib.New or Raylib.MemAlloc
-                // Raylib will delete them so it must allocate them. Your code should not allocate this memory
-                MeshRef.AllocVertices();
-                MeshRef.AllocNormals();
-                MeshRef.AllocTexCoords();
-                MeshRef.AllocColors();
-
-                MeshRef.AnimNormals = null;
-                MeshRef.AnimVertices = null;
-                MeshRef.BoneIds = null;
-                MeshRef.BoneWeights = null;
-                MeshRef.Tangents = null;
-                MeshRef.Indices = null;
-                MeshRef.TexCoords2 = null;
-            }
+            MeshRef.AllocVertices();
+            MeshRef.AllocNormals();
+            MeshRef.AllocTexCoords();
+            MeshRef.AllocColors();
         }
 
         public void SetNormal(Vector3 value) { Normal = value; }
@@ -48,45 +35,16 @@ namespace VoxelMesherSharp
 
         public void PushVertex(Vector3 vertex, float xOffset = 0, float yOffset = 0, float zOffset = 0)
         {
-            int index = 0;
-            unsafe
+            MeshRef.ColorsAs<Color>()[TriangleIndex * 3 + VertIndex] = VertColor;
+            MeshRef.TexCoordsAs<Vector2>()[TriangleIndex * 3 + VertIndex] = UV;
+            MeshRef.NormalsAs<Vector3>()[TriangleIndex * 3 + VertIndex] = Normal;
+            MeshRef.VerticesAs<Vector3>()[TriangleIndex * 3 + VertIndex] = vertex + new Vector3(xOffset, yOffset, zOffset);
+
+            VertIndex++;
+            if (VertIndex > 2)
             {
-                if (MeshRef.Colors != null)
-                {
-                    index = TriangleIndex * 12 + VertIndex * 4;
-
-                    MeshRef.Colors[index] = VertColor.R;
-                    MeshRef.Colors[index + 1] = VertColor.G;
-                    MeshRef.Colors[index + 2] = VertColor.B;
-                    MeshRef.Colors[index + 3] = VertColor.A;
-                }
-
-                if (MeshRef.TexCoords != null)
-                {
-                    index = TriangleIndex * 6 + VertIndex * 2;
-                    MeshRef.TexCoords[index] = UV.X;
-                    MeshRef.TexCoords[index + 1] = UV.Y;
-                }
-
-                if (MeshRef.Normals != null)
-                {
-                    index = TriangleIndex * 9 + VertIndex * 3;
-                    MeshRef.Normals[index] = Normal.X;
-                    MeshRef.Normals[index + 1] = Normal.Y;
-                    MeshRef.Normals[index + 2] = Normal.Z;
-                }
-
-                index = TriangleIndex * 9 + VertIndex * 3;
-                MeshRef.Vertices[index] = vertex.X + xOffset;
-                MeshRef.Vertices[index + 1] = vertex.Y + yOffset;
-                MeshRef.Vertices[index + 2] = vertex.Z + zOffset;
-
-                VertIndex++;
-                if (VertIndex > 2)
-                {
-                    TriangleIndex++;
-                    VertIndex = 0;
-                }
+                TriangleIndex++;
+                VertIndex = 0;
             }
         }
 

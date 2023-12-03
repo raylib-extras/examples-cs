@@ -62,10 +62,7 @@ namespace VoxelMesherSharp
             }
 
             // Cleanup
-            unsafe
-            {
-                UnloadMesh(ref chunk.Builder.MeshRef);
-            }
+            UnloadMesh(ref chunk.Builder.MeshRef);
 
             CloseWindow();
         }
