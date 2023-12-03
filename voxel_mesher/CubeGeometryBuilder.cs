@@ -1,7 +1,6 @@
 ﻿using Raylib_cs;
 using System;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 using static Raylib_cs.Raylib;
 
 namespace VoxelMesherSharp
