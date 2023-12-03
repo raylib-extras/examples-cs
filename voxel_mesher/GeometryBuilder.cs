@@ -26,10 +26,10 @@ namespace VoxelMesherSharp
             {
                 // be sure to allocate these buffers with Raylib.New or Raylib.MemAlloc
                 // Raylib will delete them so it must allocate them. Your code should not allocate this memory
-                MeshRef.Vertices = Raylib.New<float>(4 * 3 * MeshRef.VertexCount);
-                MeshRef.Normals = Raylib.New<float>(sizeof(float) * 3 * MeshRef.VertexCount);
-                MeshRef.TexCoords = Raylib.New<float>(sizeof(float) * 2 * MeshRef.VertexCount);
-                MeshRef.Colors = Raylib.New<byte>(1 * 4 * MeshRef.VertexCount);
+                MeshRef.AllocVertices();
+                MeshRef.AllocNormals();
+                MeshRef.AllocTexCoords();
+                MeshRef.AllocColors();
 
                 MeshRef.AnimNormals = null;
                 MeshRef.AnimVertices = null;
